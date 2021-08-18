@@ -14,25 +14,43 @@
 package example
 
 import (
-	metaRoute "github.com/aeraki-framework/go-control-plane/api/v1alpha"
+	route "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/types"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 )
 
-
-func makeRoute() *metaRoute.RouteConfiguration {
-	return &metaRoute.RouteConfiguration{
+func makeRoute() *route.RouteConfiguration {
+	return &route.RouteConfiguration{
 		Name: "test",
-		Routes: []*metaRoute.Route{
-			{
+		VirtualHosts: []*route.VirtualHost{{
+			Domains: []string{"*"},
+			Routes: []*route.Route{{
 				Name: "default",
-				Route: &metaRoute.RouteAction{
-					ClusterSpecifier: &metaRoute.RouteAction_Cluster{
-						Cluster: "outbound|20880||org.apache.dubbo.samples.basic.api.demoservice",
+				Match: &route.RouteMatch{
+					Headers: []*route.HeaderMatcher{
+						{
+							Name:"interface",
+							HeaderMatchSpecifier: &route.HeaderMatcher_ExactMatch{
+								ExactMatch:"org.apache.dubbo.samples.basic.api.DemoService",
+							},
+						},
+						{
+							Name:"method",
+							HeaderMatchSpecifier: &route.HeaderMatcher_ExactMatch{
+								ExactMatch:"sayHello",
+							},
+						},
 					},
 				},
-			},
-		},
+				Action: &route.Route_Route{
+					Route: &route.RouteAction{
+						ClusterSpecifier: &route.RouteAction_Cluster{
+							Cluster: "outbound|20880||org.apache.dubbo.samples.basic.api.demoservice",
+						},
+					},
+				},
+			}},
+		}},
 	}
 }
 
