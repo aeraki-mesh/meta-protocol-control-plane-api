@@ -36,7 +36,7 @@ var (
 )
 
 func init() {
-	l = example.Logger{Debug: true}
+	l = example.Logger{Debug:true}
 
 	flag.BoolVar(&l.Debug, "debug", false, "Enable xDS server debug logging")
 
