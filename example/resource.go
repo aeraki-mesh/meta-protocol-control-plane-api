@@ -21,9 +21,9 @@ import (
 
 func makeRoute() *route.RouteConfiguration {
 	return &route.RouteConfiguration{
-		Name: "meta-protocol-route",
+		Name: "test",
 		VirtualHosts: []*route.VirtualHost{{
-			Name: "",
+			Name: "meta-protocol-route",
 			Domains: []string{"*"},
 			Routes: []*route.Route{{
 				Name: "default",
