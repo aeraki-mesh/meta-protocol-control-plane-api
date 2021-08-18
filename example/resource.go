@@ -28,6 +28,9 @@ func makeRoute() *route.RouteConfiguration {
 			Routes: []*route.Route{{
 				Name: "default",
 				Match: &route.RouteMatch{
+					PathSpecifier: &route.RouteMatch_Prefix{
+						Prefix: "/",
+					},
 					Headers: []*route.HeaderMatcher{
 						{
 							Name:"interface",
@@ -54,7 +57,6 @@ func makeRoute() *route.RouteConfiguration {
 		}},
 	}
 }
-
 func GenerateSnapshot() cache.Snapshot {
 	return cache.NewSnapshot(
 		"1",
