@@ -2,6 +2,8 @@ module github.com/aeraki-framework/go-control-plane
 
 go 1.17
 
+replace github.com/envoyproxy/go-control-plane =>  ../go-control-plane
+
 require (
 	github.com/cncf/xds/go v0.0.0-20210805033703-aa0b78936158
 	github.com/envoyproxy/go-control-plane v0.9.9
