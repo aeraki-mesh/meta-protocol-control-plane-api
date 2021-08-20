@@ -61,6 +61,7 @@ func metaProtocolRoute2HttpRoute(metaRoute metaroute.RouteConfiguration) *httpro
 		VirtualHosts: []*httproute.VirtualHost{
 			{
 				Name: "dummy",
+				Domains: []string{"*"},
 			},
 		},
 	}
