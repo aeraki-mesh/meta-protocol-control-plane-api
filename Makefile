@@ -10,7 +10,7 @@ PKG 	:= github.com/envoyproxy/meta-protocol-control-plane-api
 
 .PHONY: build
 build:
-	@go build ./pkg/... ./meta_protocol_proxy/...
+	@go build  ./meta_protocol_proxy/...
 
 .PHONY: format
 format:

@@ -2,9 +2,6 @@ module github.com/aeraki-framework/meta-protocol-control-plane-api
 
 go 1.17
 
-replace github.com/envoyproxy/go-control-plane/api/meta_protocol_proxy/config/route/v1alpha  => github
-.com/aeraki-framework/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha
-
 require (
 	github.com/cncf/xds/go v0.0.0-20210805033703-aa0b78936158
 	github.com/envoyproxy/go-control-plane v0.9.9
@@ -12,9 +9,4 @@ require (
 	github.com/golang/protobuf v1.5.2
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.27.1
-	github.com/census-instrumentation/opencensus-proto v0.2.1 // indirect
-	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
-	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd // indirect
-	golang.org/x/text v0.3.3 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 )
