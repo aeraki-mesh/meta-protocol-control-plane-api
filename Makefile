@@ -6,11 +6,11 @@
 
 SHELL 	:= /bin/bash
 BINDIR	:= bin
-PKG 	:= github.com/envoyproxy/go-control-plane
+PKG 	:= github.com/envoyproxy/meta-protocol-control-plane-api
 
 .PHONY: build
 build:
-	@go build ./pkg/... ./api/...
+	@go build ./pkg/... ./meta_protocol_proxy/...
 
 .PHONY: format
 format:

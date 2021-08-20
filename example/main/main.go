@@ -22,7 +22,7 @@ import (
 	serverv3 "github.com/envoyproxy/go-control-plane/pkg/server/v3"
 	testv3 "github.com/envoyproxy/go-control-plane/pkg/test/v3"
 
-	"github.com/aeraki-framework/go-control-plane/example"
+	"github.com/aeraki-framework/meta-protocol-control-plane-api/example"
 )
 
 var (
@@ -36,9 +36,9 @@ var (
 )
 
 func init() {
-	l = example.Logger{Debug:true}
+	l = example.Logger{}
 
-	flag.BoolVar(&l.Debug, "debug", false, "Enable xDS server debug logging")
+	flag.BoolVar(&l.Debug, "debug", true, "Enable xDS server debug logging")
 
 	// The port that this xDS server listens on
 	flag.UintVar(&port, "port", 18000, "xDS management server port")

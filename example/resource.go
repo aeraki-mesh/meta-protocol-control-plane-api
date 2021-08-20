@@ -14,54 +14,102 @@
 package example
 
 import (
-	route "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
+	metaroute "github.com/aeraki-framework/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha"
+	httproute "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/types"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 )
 
-func makeRoute() *route.RouteConfiguration {
-	return &route.RouteConfiguration{
-		Name: "test",
-		VirtualHosts: []*route.VirtualHost{{
-			Name: "meta-protocol-route",
-			Domains: []string{"*"},
-			Routes: []*route.Route{{
-				Name: "default",
-				Match: &route.RouteMatch{
-					PathSpecifier: &route.RouteMatch_Prefix{
-						Prefix: "/",
-					},
-					Headers: []*route.HeaderMatcher{
-						{
-							Name:"interface",
-							HeaderMatchSpecifier: &route.HeaderMatcher_ExactMatch{
-								ExactMatch:"org.apache.dubbo.samples.basic.api.DemoService",
-							},
+var metaRoute = metaroute.RouteConfiguration{
+	Name: "test",
+	Routes: []*metaroute.Route{
+		{
+			Name: "test",
+			Match: &metaroute.RouteMatch{
+				Metadata: []*httproute.HeaderMatcher{
+					{
+						Name: "interface",
+						HeaderMatchSpecifier: &httproute.HeaderMatcher_ExactMatch{
+							ExactMatch: "org.apache.dubbo.samples.basic.api.DemoService",
 						},
-						{
-							Name:"method",
-							HeaderMatchSpecifier: &route.HeaderMatcher_ExactMatch{
-								ExactMatch:"sayHello",
-							},
+					},
+					{
+						Name: "method",
+						HeaderMatchSpecifier: &httproute.HeaderMatcher_ExactMatch{
+							ExactMatch: "sayHello",
 						},
 					},
 				},
-				Action: &route.Route_Route{
-					Route: &route.RouteAction{
-						ClusterSpecifier: &route.RouteAction_Cluster{
-							Cluster: "outbound|20880||org.apache.dubbo.samples.basic.api.demoservice",
-						},
-					},
+			},
+			Route: &metaroute.RouteAction{
+				ClusterSpecifier: &metaroute.RouteAction_Cluster{
+					Cluster: "outbound|20880||org.apache.dubbo.samples.basic.api.demoservice",
 				},
-			}},
-		}},
-	}
+			},
+		},
+	},
 }
+
+func makeRoute() *httproute.RouteConfiguration {
+	return metaProtocolRoute2HttpRoute(metaRoute)
+}
+
+//We use Envoy RDS(HTTP RouteConfiguration) to transmit Meta Protocol Configuration from the RDS server to the Proxy
+func metaProtocolRoute2HttpRoute(metaRoute metaroute.RouteConfiguration) *httproute.RouteConfiguration {
+	httpRoute := &httproute.RouteConfiguration{
+		Name: metaRoute.Name,
+		VirtualHosts: []*httproute.VirtualHost{
+			{
+				Name: "dummy",
+			},
+		},
+	}
+
+	for _, route := range metaRoute.Routes {
+		routeMatch := &httproute.RouteMatch{
+			PathSpecifier: &httproute.RouteMatch_Prefix{
+				Prefix: "/",
+			},
+		}
+		for _, metadata := range route.Match.Metadata {
+			routeMatch.Headers = append(routeMatch.Headers, &httproute.HeaderMatcher{
+				Name:                 metadata.Name,
+				HeaderMatchSpecifier: metadata.HeaderMatchSpecifier,
+			})
+		}
+
+		var routeAction *httproute.RouteAction
+		if route.Route.GetWeightedClusters() != nil {
+			routeAction = &httproute.RouteAction{
+				ClusterSpecifier: &httproute.RouteAction_WeightedClusters{
+					WeightedClusters: route.Route.GetWeightedClusters(),
+				},
+			}
+		} else {
+			routeAction = &httproute.RouteAction{
+				ClusterSpecifier: &httproute.RouteAction_Cluster{
+					Cluster: route.Route.GetCluster(),
+				},
+			}
+		}
+
+		httpRoute.VirtualHosts[0].Routes = append(httpRoute.VirtualHosts[0].Routes, &httproute.Route{
+			Name:  route.Name,
+			Match: routeMatch,
+			Action: &httproute.Route_Route{
+				Route: routeAction,
+			},
+		})
+	}
+
+	return httpRoute
+}
+
 func GenerateSnapshot() cache.Snapshot {
 	return cache.NewSnapshot(
 		"1",
 		[]types.Resource{}, // endpoints
-		[]types.Resource{},// clusters
+		[]types.Resource{}, // clusters
 		[]types.Resource{makeRoute()},
 		[]types.Resource{}, //listeners
 		[]types.Resource{}, // runtimes
