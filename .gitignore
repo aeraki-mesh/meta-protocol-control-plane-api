@@ -5,6 +5,7 @@
 *.iml
 *.bak
 .vagrant
+.idea
 
 # Eclipse artifacts
 /.project
