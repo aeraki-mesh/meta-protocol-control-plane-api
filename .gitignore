@@ -1,5 +1,6 @@
 /vendor
 /bin
+/out
 .idea*
 *.iml
 *.bak

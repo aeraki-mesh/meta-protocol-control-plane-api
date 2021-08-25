@@ -1,27 +1,36 @@
-.DEFAULT_GOAL	:= build
+.DEFAULT_GOAL	:= example-rds-server
 
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
 
 SHELL 	:= /bin/bash
-BINDIR	:= bin
 PKG 	:= github.com/envoyproxy/meta-protocol-control-plane-api
+OUT?=./out
+DOCKER_TMP?=$(OUT)/docker_temp/
+DOCKER_TAG?=aeraki/example-rds-server:latest
+BINARY_NAME?=$(OUT)/example-rds-server
 
 .PHONY: build
 build:
-	@go build  ./meta_protocol_proxy/...
-
-.PHONY: format
-format:
-	@goimports -local $(PKG) -w -l pkg
+	GOOS=linux go build ./meta_protocol_proxy/...
 
 #--------------------------------------
 #-- example xDS control plane server
 #--------------------------------------
-.PHONY: $(BINDIR)/example example
+.PHONY: $(OUT)/example-rds-server example-rds-server
 
-$(BINDIR)/example:
-	@go build -race -o $@ example/main/main.go
+$(OUT)/example-rds-server:
+	GOOS=linux go build  -o $@ example/main/main.go
 
-example: $(BINDIR)/example
+example-rds-server: $(OUT)/example-rds-server
+
+docker-build: example-rds-server
+	rm -rf $(DOCKER_TMP)
+	mkdir $(DOCKER_TMP)
+	cp example/docker/Dockerfile $(DOCKER_TMP)
+	cp $(BINARY_NAME) $(DOCKER_TMP)
+	docker build -t $(DOCKER_TAG) $(DOCKER_TMP)
+	rm -rf $(DOCKER_TMP)
+docker-push: docker-build
+	docker push $(DOCKER_TAG)
