@@ -18,11 +18,9 @@ import (
 	"flag"
 	"os"
 
+	"github.com/aeraki-framework/meta-protocol-control-plane-api/example"
 	cachev3 "github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 	serverv3 "github.com/envoyproxy/go-control-plane/pkg/server/v3"
-	testv3 "github.com/envoyproxy/go-control-plane/pkg/test/v3"
-
-	"github.com/aeraki-framework/meta-protocol-control-plane-api/example"
 )
 
 var (
@@ -65,7 +63,6 @@ func main() {
 
 	// Run the xDS server
 	ctx := context.Background()
-	cb := &testv3.Callbacks{Debug: true}
-	srv := serverv3.NewServer(ctx, cache, cb)
+	srv := serverv3.NewServer(ctx, cache, example.NewCallbacks(l))
 	example.RunServer(ctx, srv, port)
 }
