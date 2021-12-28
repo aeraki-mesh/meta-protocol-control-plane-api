@@ -48,16 +48,6 @@ func (m *LocalRateLimit) Validate() error {
 		}
 	}
 
-	if v, ok := interface{}(m.GetMatch()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LocalRateLimitValidationError{
-				field:  "Match",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	if v, ok := interface{}(m.GetTokenBucket()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return LocalRateLimitValidationError{
@@ -68,13 +58,13 @@ func (m *LocalRateLimit) Validate() error {
 		}
 	}
 
-	for idx, item := range m.GetDescriptors() {
+	for idx, item := range m.GetConditions() {
 		_, _ = idx, item
 
 		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return LocalRateLimitValidationError{
-					field:  fmt.Sprintf("Descriptors[%v]", idx),
+					field:  fmt.Sprintf("Conditions[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -140,35 +130,54 @@ var _ interface {
 	ErrorName() string
 } = LocalRateLimitValidationError{}
 
-// Validate checks the field values on LocalRatelimitMatch with the rules
+// Validate checks the field values on LocalRateLimitCondition with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *LocalRatelimitMatch) Validate() error {
+func (m *LocalRateLimitCondition) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	for idx, item := range m.GetMetadata() {
-		_, _ = idx, item
+	if m.GetMatch() == nil {
+		return LocalRateLimitConditionValidationError{
+			field:  "Match",
+			reason: "value is required",
+		}
+	}
 
-		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return LocalRatelimitMatchValidationError{
-					field:  fmt.Sprintf("Metadata[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
+	if v, ok := interface{}(m.GetMatch()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return LocalRateLimitConditionValidationError{
+				field:  "Match",
+				reason: "embedded message failed validation",
+				cause:  err,
 			}
 		}
+	}
 
+	if m.GetTokenBucket() == nil {
+		return LocalRateLimitConditionValidationError{
+			field:  "TokenBucket",
+			reason: "value is required",
+		}
+	}
+
+	if v, ok := interface{}(m.GetTokenBucket()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return LocalRateLimitConditionValidationError{
+				field:  "TokenBucket",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	return nil
 }
 
-// LocalRatelimitMatchValidationError is the validation error returned by
-// LocalRatelimitMatch.Validate if the designated constraints aren't met.
-type LocalRatelimitMatchValidationError struct {
+// LocalRateLimitConditionValidationError is the validation error returned by
+// LocalRateLimitCondition.Validate if the designated constraints aren't met.
+type LocalRateLimitConditionValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -176,24 +185,24 @@ type LocalRatelimitMatchValidationError struct {
 }
 
 // Field function returns field value.
-func (e LocalRatelimitMatchValidationError) Field() string { return e.field }
+func (e LocalRateLimitConditionValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e LocalRatelimitMatchValidationError) Reason() string { return e.reason }
+func (e LocalRateLimitConditionValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e LocalRatelimitMatchValidationError) Cause() error { return e.cause }
+func (e LocalRateLimitConditionValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e LocalRatelimitMatchValidationError) Key() bool { return e.key }
+func (e LocalRateLimitConditionValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e LocalRatelimitMatchValidationError) ErrorName() string {
-	return "LocalRatelimitMatchValidationError"
+func (e LocalRateLimitConditionValidationError) ErrorName() string {
+	return "LocalRateLimitConditionValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e LocalRatelimitMatchValidationError) Error() string {
+func (e LocalRateLimitConditionValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -205,14 +214,14 @@ func (e LocalRatelimitMatchValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sLocalRatelimitMatch.%s: %s%s",
+		"invalid %sLocalRateLimitCondition.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = LocalRatelimitMatchValidationError{}
+var _ error = LocalRateLimitConditionValidationError{}
 
 var _ interface {
 	Field() string
@@ -220,4 +229,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = LocalRatelimitMatchValidationError{}
+} = LocalRateLimitConditionValidationError{}
