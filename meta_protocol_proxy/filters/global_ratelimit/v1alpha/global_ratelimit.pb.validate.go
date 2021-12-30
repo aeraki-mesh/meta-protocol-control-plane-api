@@ -86,20 +86,20 @@ func (m *RateLimit) Validate() error {
 		}
 	}
 
-	if len(m.GetActions()) < 1 {
+	if len(m.GetDescriptors()) < 1 {
 		return RateLimitValidationError{
-			field:  "Actions",
+			field:  "Descriptors",
 			reason: "value must contain at least 1 item(s)",
 		}
 	}
 
-	for idx, item := range m.GetActions() {
+	for idx, item := range m.GetDescriptors() {
 		_, _ = idx, item
 
 		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return RateLimitValidationError{
-					field:  fmt.Sprintf("Actions[%v]", idx),
+					field:  fmt.Sprintf("Descriptors[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -165,22 +165,22 @@ var _ interface {
 	ErrorName() string
 } = RateLimitValidationError{}
 
-// Validate checks the field values on Action with the rules defined in the
+// Validate checks the field values on Descriptor with the rules defined in the
 // proto definition for this message. If any rules are violated, an error is returned.
-func (m *Action) Validate() error {
+func (m *Descriptor) Validate() error {
 	if m == nil {
 		return nil
 	}
 
 	if utf8.RuneCountInString(m.GetProperty()) < 1 {
-		return ActionValidationError{
+		return DescriptorValidationError{
 			field:  "Property",
 			reason: "value length must be at least 1 runes",
 		}
 	}
 
 	if utf8.RuneCountInString(m.GetDescriptorKey()) < 1 {
-		return ActionValidationError{
+		return DescriptorValidationError{
 			field:  "DescriptorKey",
 			reason: "value length must be at least 1 runes",
 		}
@@ -189,9 +189,9 @@ func (m *Action) Validate() error {
 	return nil
 }
 
-// ActionValidationError is the validation error returned by Action.Validate if
-// the designated constraints aren't met.
-type ActionValidationError struct {
+// DescriptorValidationError is the validation error returned by
+// Descriptor.Validate if the designated constraints aren't met.
+type DescriptorValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -199,22 +199,22 @@ type ActionValidationError struct {
 }
 
 // Field function returns field value.
-func (e ActionValidationError) Field() string { return e.field }
+func (e DescriptorValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ActionValidationError) Reason() string { return e.reason }
+func (e DescriptorValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ActionValidationError) Cause() error { return e.cause }
+func (e DescriptorValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ActionValidationError) Key() bool { return e.key }
+func (e DescriptorValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ActionValidationError) ErrorName() string { return "ActionValidationError" }
+func (e DescriptorValidationError) ErrorName() string { return "DescriptorValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ActionValidationError) Error() string {
+func (e DescriptorValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -226,14 +226,14 @@ func (e ActionValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sAction.%s: %s%s",
+		"invalid %sDescriptor.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ActionValidationError{}
+var _ error = DescriptorValidationError{}
 
 var _ interface {
 	Field() string
@@ -241,4 +241,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ActionValidationError{}
+} = DescriptorValidationError{}
