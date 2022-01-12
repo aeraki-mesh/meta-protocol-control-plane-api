@@ -7,8 +7,8 @@
 package aeraki_meta_protocol_proxy_filters_ratelimit_v1alpha
 
 import (
+	v1alpha "github.com/aeraki-mesh/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha"
 	_ "github.com/cncf/xds/go/udpa/annotations"
-        v1alpha "github.com/aeraki-framework/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha"
 	_ "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
 	v3 "github.com/envoyproxy/go-control-plane/envoy/config/ratelimit/v3"
 	_ "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"

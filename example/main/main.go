@@ -18,7 +18,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/aeraki-framework/meta-protocol-control-plane-api/example"
+	"github.com/aeraki-mesh/meta-protocol-control-plane-api/example"
 	cachev3 "github.com/envoyproxy/go-control-plane/pkg/cache/v3"
 	serverv3 "github.com/envoyproxy/go-control-plane/pkg/server/v3"
 )

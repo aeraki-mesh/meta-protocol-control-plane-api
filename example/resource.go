@@ -14,7 +14,7 @@
 package example
 
 import (
-	metaroute "github.com/aeraki-framework/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha"
+	metaroute "github.com/aeraki-mesh/meta-protocol-control-plane-api/meta_protocol_proxy/config/route/v1alpha"
 	httproute "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/types"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
@@ -60,7 +60,7 @@ func metaProtocolRoute2HttpRoute(metaRoute metaroute.RouteConfiguration) *httpro
 		Name: metaRoute.Name,
 		VirtualHosts: []*httproute.VirtualHost{
 			{
-				Name: "dummy",
+				Name:    "dummy",
 				Domains: []string{"*"},
 			},
 		},

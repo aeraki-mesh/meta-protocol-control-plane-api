@@ -1,4 +1,4 @@
-module github.com/aeraki-framework/meta-protocol-control-plane-api
+module github.com/aeraki-mesh/meta-protocol-control-plane-api
 
 go 1.17
 
