@@ -341,6 +341,13 @@ func (m *RouteAction) Validate() error {
 		return nil
 	}
 
+	if len(m.GetHashPolicy()) > 100 {
+		return RouteActionValidationError{
+			field:  "HashPolicy",
+			reason: "value must contain no more than 100 item(s)",
+		}
+	}
+
 	switch m.ClusterSpecifier.(type) {
 
 	case *RouteAction_Cluster:
