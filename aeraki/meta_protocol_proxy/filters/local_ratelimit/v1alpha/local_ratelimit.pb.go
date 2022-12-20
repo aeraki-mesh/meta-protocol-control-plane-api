@@ -8,7 +8,7 @@ package localratelimitv1alpha
 
 import (
 	_ "github.com/cncf/xds/go/udpa/annotations"
-	v1alpha "github.com/envoyproxy/go-control-plane/api/meta_protocol_proxy/config/route/v1alpha"
+	v1alpha "github.com/aeraki-mesh/meta-protocol-control-plane-api/aeraki/meta_protocol_proxy/config/route/v1alpha"
 	_ "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
 	_ "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	v3 "github.com/envoyproxy/go-control-plane/envoy/type/v3"

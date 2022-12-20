@@ -8,7 +8,7 @@ package v1alpha
 
 import (
 	_ "github.com/cncf/xds/go/udpa/annotations"
-	v1alpha "github.com/envoyproxy/go-control-plane/api/meta_protocol_proxy/config/route/v1alpha"
+        v1alpha "github.com/aeraki-mesh/meta-protocol-control-plane-api/aeraki/meta_protocol_proxy/config/route/v1alpha"	
 	v3 "github.com/envoyproxy/go-control-plane/envoy/config/accesslog/v3"
 	v31 "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
 	v33 "github.com/envoyproxy/go-control-plane/envoy/config/trace/v3"
