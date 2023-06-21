@@ -68,16 +68,7 @@ func (m *MetaProtocolProxy) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetApplicationProtocol()) < 1 {
-		err := MetaProtocolProxyValidationError{
-			field:  "ApplicationProtocol",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for ApplicationProtocol
 
 	if all {
 		switch v := interface{}(m.GetCodec()).(type) {
