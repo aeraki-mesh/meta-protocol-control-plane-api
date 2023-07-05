@@ -3,18 +3,18 @@ module github.com/aeraki-mesh/meta-protocol-control-plane-api
 go 1.17
 
 require (
-	github.com/cncf/xds/go v0.0.0-20210805033703-aa0b78936158
-	github.com/envoyproxy/go-control-plane v0.9.9
-	github.com/envoyproxy/protoc-gen-validate v0.6.1
+	github.com/cncf/xds/go v0.0.0-20230105202645-06c439db220b
+	github.com/envoyproxy/go-control-plane v0.10.3
+	github.com/envoyproxy/protoc-gen-validate v0.9.1
 	github.com/golang/protobuf v1.5.2
-	google.golang.org/grpc v1.36.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.28.1
 )
 
 require (
-	github.com/census-instrumentation/opencensus-proto v0.2.1 // indirect
-	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
-	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd // indirect
-	golang.org/x/text v0.3.3 // indirect
-	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
+	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
+	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
+	golang.org/x/text v0.6.0 // indirect
+	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 )
