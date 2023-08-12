@@ -11,13 +11,16 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
 package example
 
 import (
-	metaroute "github.com/aeraki-mesh/meta-protocol-control-plane-api/aeraki/meta_protocol_proxy/config/route/v1alpha"
 	httproute "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/types"
 	"github.com/envoyproxy/go-control-plane/pkg/cache/v3"
+	"github.com/envoyproxy/go-control-plane/pkg/resource/v3"
+
+	metaroute "github.com/aeraki-mesh/meta-protocol-control-plane-api/aeraki/meta_protocol_proxy/config/route/v1alpha"
 )
 
 var metaRoute = metaroute.RouteConfiguration{
@@ -54,7 +57,7 @@ func makeRoute() *httproute.RouteConfiguration {
 	return metaProtocolRoute2HttpRoute(metaRoute)
 }
 
-//We use Envoy RDS(HTTP RouteConfiguration) to transmit Meta Protocol Configuration from the RDS server to the Proxy
+// We use Envoy RDS(HTTP RouteConfiguration) to transmit Meta Protocol Configuration from the RDS server to the Proxy
 func metaProtocolRoute2HttpRoute(metaRoute metaroute.RouteConfiguration) *httproute.RouteConfiguration {
 	httpRoute := &httproute.RouteConfiguration{
 		Name: metaRoute.Name,
@@ -106,14 +109,11 @@ func metaProtocolRoute2HttpRoute(metaRoute metaroute.RouteConfiguration) *httpro
 	return httpRoute
 }
 
-func GenerateSnapshot() cache.Snapshot {
-	return cache.NewSnapshot(
-		"1",
-		[]types.Resource{}, // endpoints
-		[]types.Resource{}, // clusters
-		[]types.Resource{makeRoute()},
-		[]types.Resource{}, //listeners
-		[]types.Resource{}, // runtimes
-		[]types.Resource{}, // secrets
+func GenerateSnapshot() *cache.Snapshot {
+	snap, _ := cache.NewSnapshot("1",
+		map[resource.Type][]types.Resource{
+			resource.RouteType: {makeRoute()},
+		},
 	)
+	return snap
 }
