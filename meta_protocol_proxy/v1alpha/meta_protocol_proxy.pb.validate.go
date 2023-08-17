@@ -254,9 +254,20 @@ func (m *MetaProtocolProxy) validate(all bool) error {
 		}
 	}
 
-	switch m.RouteSpecifier.(type) {
-
+	oneofRouteSpecifierPresent := false
+	switch v := m.RouteSpecifier.(type) {
 	case *MetaProtocolProxy_Rds:
+		if v == nil {
+			err := MetaProtocolProxyValidationError{
+				field:  "RouteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRouteSpecifierPresent = true
 
 		if all {
 			switch v := interface{}(m.GetRds()).(type) {
@@ -288,6 +299,17 @@ func (m *MetaProtocolProxy) validate(all bool) error {
 		}
 
 	case *MetaProtocolProxy_RouteConfig:
+		if v == nil {
+			err := MetaProtocolProxyValidationError{
+				field:  "RouteSpecifier",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+		oneofRouteSpecifierPresent = true
 
 		if all {
 			switch v := interface{}(m.GetRouteConfig()).(type) {
@@ -319,6 +341,9 @@ func (m *MetaProtocolProxy) validate(all bool) error {
 		}
 
 	default:
+		_ = v // ensures v is used
+	}
+	if !oneofRouteSpecifierPresent {
 		err := MetaProtocolProxyValidationError{
 			field:  "RouteSpecifier",
 			reason: "value is required",
@@ -327,7 +352,6 @@ func (m *MetaProtocolProxy) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
-
 	}
 
 	if len(errors) > 0 {

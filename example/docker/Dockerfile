@@ -1,5 +1,9 @@
 FROM alpine:3.13.5
 
+LABEL org.opencontainers.image.source="https://github.com/aeraki-mesh/meta-protocol-proxy"
+LABEL org.opencontainers.image.authors="zhaohuabing@gmail.com"
+LABEL org.opencontainers.image.documentation="https://aeraki.net"
+
 ENV DEBUG="true"
 ENV PORT="18000"
 ENV NODE_ID="test-id"

@@ -8,7 +8,7 @@ SHELL 	:= /bin/bash
 PKG 	:= github.com/envoyproxy/meta-protocol-control-plane-api
 OUT?=./out
 DOCKER_TMP?=$(OUT)/docker_temp/
-DOCKER_TAG?=aeraki/example-rds-server:latest
+DOCKER_TAG?=ghcr.io/aeraki-mesh/example-rds-server:latest
 BINARY_NAME?=$(OUT)/example-rds-server
 
 .PHONY: build
